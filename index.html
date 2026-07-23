@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Asistencia</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card">
+        <h2>Control de Asistencia</h2>
+        <p>Ingresá tu ID de empleado para registrar tu jornada</p>
+        
+        <div class="form-group">
+            <label for="idEmpleado">ID de Empleado:</label>
+            <input type="text" id="idEmpleado" placeholder="Ej: EMP001" required>
+        </div>
+
+        <div class="buttons">
+            <button onclick="registrarFichaje('Entrada')" class="btn-entrada">Marcar Entrada</button>
+            <button onclick="registrarFichaje('Salida')" class="btn-salida">Marcar Salida</button>
+        </div>
+
+        <p id="mensaje" class="mensaje"></p>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
