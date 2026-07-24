@@ -3,23 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control de Asistencia</title>
+    <title>Fichaje - Control de Asistencia</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Librería para leer códigos QR con la cámara -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 <body>
     <div class="card">
         <h2>Control de Asistencia</h2>
-        <p>Ingresá tu ID de empleado para registrar tu jornada</p>
+        <p id="saludo">Registrá tu entrada o salida</p>
         
-        <div class="form-group">
-            <label for="idEmpleado">ID de Empleado:</label>
-            <input type="text" id="idEmpleado" placeholder="Ej: EMP001" required>
+        <div class="form-group" id="input-container">
+            <label for="idEmpleado">Tu ID o Usuario:</label>
+            <input type="text" id="idEmpleado" placeholder="Ej: JP-8421" required>
+            <button onclick="guardarUsuario()" class="btn-guardar">Recordar mi usuario</button>
+        </div>
+
+        <div id="usuario-guardado" style="display:none; margin-bottom: 20px;">
+            <p>Conectado como: <strong id="lbl-usuario"></strong> <a href="#" onclick="cambiarUsuario()" style="font-size: 12px; color: #dc3545;">(Cambiar)</a></p>
         </div>
 
         <div class="buttons">
             <button onclick="registrarFichaje('Entrada')" class="btn-entrada">Marcar Entrada</button>
             <button onclick="registrarFichaje('Salida')" class="btn-salida">Marcar Salida</button>
         </div>
+
+        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+        
+        <!-- Sección de Código QR -->
+        <button onclick="toggleScanner()" class="btn-qr">Escanear QR de Fichaje</button>
+        <div id="reader" style="width: 100%; margin-top: 15px; display: none;"></div>
 
         <p id="mensaje" class="mensaje"></p>
     </div>
