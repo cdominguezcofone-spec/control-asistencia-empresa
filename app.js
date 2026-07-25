@@ -1,24 +1,25 @@
-const URL_API = "https://script.google.com/macros/s/AKfycbxTVMD4qWKsYNShhFbdvO9bY2G_kpzlDM8p15qOkT5sHk37X5jshF8DNoHIPK396ZWk9A/exec";
+const URL_API = "https://script.google.com/macros/s/AKfycbzPUk0uKHcQLChcyzjn8Dnjr1dEpkYF5PAGcWgzqFnTT18UqOPBRa51u_5wxxQT5wGRJg/exec";
 
 window.onload = function() {
     const urlParams = new URLSearchParams(window.location.search);
     const idUrl = urlParams.get("id");
-
+    
     if (idUrl) {
         localStorage.setItem("id_empleado_guardado", idUrl);
         window.history.replaceState({}, document.title, window.location.pathname);
     }
 
     const usuarioGuardado = localStorage.getItem("id_empleado_guardado");
+
     if (usuarioGuardado) {
         document.getElementById("idEmpleado").value = usuarioGuardado;
         document.getElementById("input-container").style.display = "none";
         document.getElementById("lbl-usuario").textContent = usuarioGuardado;
-        document.getElementById("usuario-guardado").style.display = "block";
+        document.getElementById("panel-fichaje").style.display = "block";
     }
 };
 
-function guardarUsuario() {
+function guardarUsuarioManual() {
     const id = document.getElementById("idEmpleado").value.trim();
     if (!id) {
         alert("Ingresá un ID válido.");
@@ -33,8 +34,8 @@ function cambiarUsuario() {
     location.reload();
 }
 
-function registrarFichaje(tipo, idForzado = null) {
-    const idEmpleado = idForzado || localStorage.getItem("id_empleado_guardado") || document.getElementById("idEmpleado").value.trim();
+function registrarFichaje(tipo) {
+    const idEmpleado = localStorage.getItem("id_empleado_guardado");
     const mensajeEl = document.getElementById("mensaje");
 
     if (!idEmpleado) {
@@ -53,7 +54,7 @@ function registrarFichaje(tipo, idForzado = null) {
 
     fetch(URL_API, {
         method: "POST",
-        mode: "no-cors", 
+        mode: "no-cors",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(datos)
     })
@@ -61,32 +62,36 @@ function registrarFichaje(tipo, idForzado = null) {
         mensajeEl.style.color = "green";
         mensajeEl.textContent = `¡${tipo} registrada con éxito (${idEmpleado})!`;
     })
-    .catch((error) => {
+    .catch(error => {
         mensajeEl.style.color = "red";
         mensajeEl.textContent = "Error al conectar con el servidor.";
     });
 }
 
 let html5QrCode;
+
 function toggleScanner() {
     const readerDiv = document.getElementById("reader");
-    if (readerDiv.style.display === "none") {
+    if (readerDiv.style.display === "none" || readerDiv.style.display === "") {
         readerDiv.style.display = "block";
         html5QrCode = new Html5Qrcode("reader");
         html5QrCode.start(
             { facingMode: "environment" }, 
-            { fps: 10, qrbox: 250 },
+            { fps: 10, qrbox: 250 }, 
             qrCodeMessage => {
-                html5QrCode.stop();
-                readerDiv.style.display = "none";
-                
-                let idDetectado = qrCodeMessage;
                 if (qrCodeMessage.includes("?id=")) {
                     const urlEscaneada = new URL(qrCodeMessage);
                     idDetectado = urlEscaneada.searchParams.get("id");
+                } else {
+                    idDetectado = qrCodeMessage;
                 }
-
-                registrarFichaje("Entrada", idDetectado);
+                
+                localStorage.setItem("id_empleado_guardado", idDetectado);
+                if(html5QrCode) {
+                    html5QrCode.stop();
+                }
+                readerDiv.style.display = "none";
+                location.reload();
             },
             errorMessage => {}
         ).catch(err => {
