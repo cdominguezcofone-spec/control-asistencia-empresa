@@ -3,40 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fichaje - Control de Asistencia</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Control de Asistencia</title>
     <!-- Librería para leer códigos QR con la cámara -->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eef2f7; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; box-sizing: border-box; }
+        input, button { width: 100%; padding: 12px; margin-top: 10px; box-sizing: border-box; border-radius: 6px; border: 1px solid #ccc; font-size: 16px; }
+        button { background: #28a745; color: white; border: none; font-weight: bold; cursor: pointer; }
+        button:hover { background: #218838; }
+        .btn-salida { background: #dc3545 !important; }
+        .btn-salida:hover { background: #c82333 !important; }
+        .btn-secundario { background: #6c757d !important; margin-top: 5px; }
+        #reader { width: 100%; margin-top: 15px; border-radius: 6px; overflow: hidden; }
+        #mensaje { font-weight: bold; margin-top: 15px; font-size: 16px; }
+        .oculto { display: none; }
+    </style>
 </head>
 <body>
     <div class="card">
         <h2>Control de Asistencia</h2>
-        <p id="saludo">Registrá tu entrada o salida</p>
         
-        <div class="form-group" id="input-container">
-            <label for="idEmpleado">Tu ID o Usuario:</label>
-            <input type="text" id="idEmpleado" placeholder="Ej: JP-8421" required>
-            <button onclick="guardarUsuario()" class="btn-guardar">Recordar mi usuario</button>
+        <!-- Contenedor para ingresar ID manual o escanear -->
+        <div id="input-container">
+            <p>Ingresa tu ID de empleado o escanea tu QR</p>
+            <input type="text" id="idEmpleado" placeholder="Ej: NG-6491">
+            <button onclick="guardarUsuarioManual()">Guardar ID</button>
+            <button class="btn-secundario" onclick="toggleScanner()">Escanear QR</button>
+            <div id="reader" class="oculto"></div>
         </div>
 
-        <div id="usuario-guardado" style="display:none; margin-bottom: 20px;">
-            <p>Conectado como: <strong id="lbl-usuario"></strong> <a href="#" onclick="cambiarUsuario()" style="font-size: 12px; color: #dc3545;">(Cambiar)</a></p>
+        <!-- Contenedor cuando el usuario ya está identificado -->
+        <div id="panel-fichaje" class="oculto">
+            <p>Bienvenido/a, <strong id="lbl-usuario"></strong></p>
+            <button onclick="registrarFichaje('Entrada')">Registrar ENTRADA</button>
+            <button class="btn-salida" onclick="registrarFichaje('Salida')">Registrar SALIDA</button>
+            <button class="btn-secundario" onclick="cambiarUsuario()">Cambiar de Usuario / ID</button>
         </div>
 
-        <div class="buttons">
-            <button onclick="registrarFichaje('Entrada')" class="btn-entrada">Marcar Entrada</button>
-            <button onclick="registrarFichaje('Salida')" class="btn-salida">Marcar Salida</button>
-        </div>
-
-        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-        
-        <!-- Sección de Código QR -->
-        <button onclick="toggleScanner()" class="btn-qr">Escanear QR de Fichaje</button>
-        <div id="reader" style="width: 100%; margin-top: 15px; display: none;"></div>
-
-        <p id="mensaje" class="mensaje"></p>
+        <p id="mensaje"></p>
     </div>
 
+    <!-- Vinculamos el archivo app.js -->
     <script src="app.js"></script>
 </body>
 </html>
