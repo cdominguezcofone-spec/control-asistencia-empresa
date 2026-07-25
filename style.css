@@ -1,6 +1,6 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f6f9;
+    background: #eef2f7;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,90 +10,63 @@ body {
 
 .card {
     background: white;
-    padding: 30px;
+    padding: 25px;
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     width: 100%;
     max-width: 400px;
     text-align: center;
     box-sizing: border-box;
 }
 
-h2 {
-    color: #333;
-    margin-bottom: 10px;
-}
-
-p {
-    color: #666;
-    font-size: 14px;
-    margin-bottom: 20px;
-}
-
-.form-group {
-    text-align: left;
-    margin-bottom: 20px;
-}
-
-label {
-    display: block;
-    font-weight: bold;
-    font-size: 13px;
-    color: #444;
-    margin-bottom: 5px;
-}
-
-input {
+input, button {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 16px;
+    padding: 12px;
+    margin-top: 10px;
     box-sizing: border-box;
-}
-
-.buttons {
-    display: flex;
-    gap: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 16px;
 }
 
 button {
-    flex: 1;
-    padding: 12px;
+    background: #28a745;
+    color: white;
     border: none;
-    border-radius: 6px;
-    font-size: 15px;
     font-weight: bold;
     cursor: pointer;
-    color: white;
-    transition: opacity 0.2s;
 }
 
 button:hover {
-    opacity: 0.9;
-}
-
-.btn-entrada {
-    background-color: #28a745;
+    background: #218838;
 }
 
 .btn-salida {
-    background-color: #dc3545;
+    background: #dc3545 !important;
 }
 
-.btn-guardar {
-    background-color: #007bff;
+.btn-salida:hover {
+    background: #c82333 !important;
+}
+
+.btn-secundario {
+    background: #6c757d !important;
+    margin-top: 5px;
+}
+
+#reader {
     width: 100%;
-    margin-top: 10px;
+    margin-top: 15px;
+    border-radius: 6px;
+    overflow: hidden;
 }
 
-.btn-qr {
-    background-color: #6c757d;
-    width: 100%;
-}
-
-.mensaje {
-    margin-top: 20px;
+#mensaje {
     font-weight: bold;
-    font-size: 14px;
+    margin-top: 15px;
+    font-size: 16px;
+}
+
+.oculto {
+    display: none;
 }
