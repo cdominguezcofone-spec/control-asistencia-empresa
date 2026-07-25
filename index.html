@@ -6,19 +6,8 @@
     <title>Control de Asistencia</title>
     <!-- Librería para leer códigos QR con la cámara -->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eef2f7; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; box-sizing: border-box; }
-        input, button { width: 100%; padding: 12px; margin-top: 10px; box-sizing: border-box; border-radius: 6px; border: 1px solid #ccc; font-size: 16px; }
-        button { background: #28a745; color: white; border: none; font-weight: bold; cursor: pointer; }
-        button:hover { background: #218838; }
-        .btn-salida { background: #dc3545 !important; }
-        .btn-salida:hover { background: #c82333 !important; }
-        .btn-secundario { background: #6c757d !important; margin-top: 5px; }
-        #reader { width: 100%; margin-top: 15px; border-radius: 6px; overflow: hidden; }
-        #mensaje { font-weight: bold; margin-top: 15px; font-size: 16px; }
-        .oculto { display: none; }
-    </style>
+    <!-- Enlace a tu archivo de estilos CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="card">
@@ -44,97 +33,7 @@
         <p id="mensaje"></p>
     </div>
 
-    <script>
-        const URL_API = "https://script.google.com/macros/s/AKfycbxfLLc5emyPMR0G6ZWFps5GCm2U6P6bzHx1dspSSTMN_HvE8G1fMJ1LiYE_U5AT4_V-4w/exec";
-        let html5QrCode = null;
-        let idActual = "";
-
-        function guardarUsuarioManual() {
-            const id = document.getElementById("idEmpleado").value.trim();
-            if (!id) {
-                alert("Por favor ingresa un ID válido.");
-                return;
-            }
-            procesarIdentificacion(id);
-        }
-
-        function procesarIdentificacion(id) {
-            idActual = id;
-            if (html5QrCode && html5QrCode.isScanning) {
-                html5QrCode.stop().catch(err => console.log(err));
-            }
-            document.getElementById("input-container").classList.add("oculto");
-            document.getElementById("panel-fichaje").classList.remove("oculto");
-            document.getElementById("lbl-usuario").textContent = idActual;
-            document.getElementById("mensaje").textContent = "";
-        }
-
-        function cambiarUsuario() {
-            idActual = "";
-            document.getElementById("idEmpleado").value = "";
-            document.getElementById("panel-fichaje").classList.add("oculto");
-            document.getElementById("input-container").classList.remove("oculto");
-            document.getElementById("mensaje").textContent = "";
-        }
-
-        function toggleScanner() {
-            const readerDiv = document.getElementById("reader");
-            if (readerDiv.classList.contains("oculto")) {
-                readerDiv.classList.remove("oculto");
-                if (!html5QrCode) {
-                    html5QrCode = new Html5Qrcode("reader");
-                }
-                html5QrCode.start(
-                    { facingMode: "environment" },
-                    { fps: 10, qrbox: 250 },
-                    qrCodeMessage => {
-                        // Si el QR contiene una URL completa con ?id=XXXX, extraemos el ID
-                        let matchId = qrCodeMessage;
-                        if (qrCodeMessage.includes("?id=")) {
-                            matchId = qrCodeMessage.split("?id=")[1];
-                        }
-                        procesarIdentificacion(matchId);
-                    },
-                    errorMessage => {
-                        // Errores de escaneo en tiempo real se pueden ignorar
-                    }
-                ).catch(err => {
-                    alert("No se pudo acceder a la cámara.");
-                    readerDiv.classList.add("oculto");
-                });
-            } else {
-                if (html5QrCode && html5QrCode.isScanning) {
-                    html5QrCode.stop().then(() => {
-                        readerDiv.classList.add("oculto");
-                    }).catch(err => console.log(err));
-                } else {
-                    readerDiv.classList.add("oculto");
-                }
-            }
-        }
-
-        function registrarFichaje(tipo) {
-            const mensajeEl = document.getElementById("mensaje");
-            mensajeEl.style.color = "#333";
-            mensajeEl.textContent = "Registrando " + tipo + "...";
-
-            // Si el QR tenía la URL completa o solo el ID, enviamos la petición limpia
-            const urlFinal = `${URL_API}?accion=fichaje_${tipo.toLowerCase()}&id_empleado=${encodeURIComponent(idActual)}`;
-
-            fetch(urlFinal, {
-                method: "GET",
-                mode: "no-cors"
-            })
-            .then(() => {
-                mensajeEl.style.color = "green";
-                mensajeEl.textContent = `¡${tipo} registrada con éxito para ${idActual}!`;
-            })
-            .catch(error => {
-                mensajeEl.style.color = "red";
-                mensajeEl.textContent = "Error al conectar con la planilla.";
-                console.error("Error:", error);
-            });
-        }
-    </script>
+    <!-- Enlace a tu archivo de lógica JS -->
+    <script src="script.js"></script>
 </body>
 </html>
