@@ -3,19 +3,24 @@ let html5QrCode = null;
 let idActual = "";
 
 function guardarUsuarioManual() {
-    const id = document.getElementById("idEmpleado").value.trim();
+    const idInput = document.getElementById("idEmpleado");
+    const id = idInput.value.trim();
+    
     if (!id) {
         alert("Por favor ingresa un ID válido.");
         return;
     }
+    
     procesarIdentificacion(id);
 }
 
 function procesarIdentificacion(id) {
     idActual = id;
+    
     if (html5QrCode && html5QrCode.isScanning) {
         html5QrCode.stop().catch(err => console.log(err));
     }
+    
     document.getElementById("input-container").classList.add("oculto");
     document.getElementById("panel-fichaje").classList.remove("oculto");
     document.getElementById("lbl-usuario").textContent = idActual;
@@ -32,11 +37,13 @@ function cambiarUsuario() {
 
 function toggleScanner() {
     const readerDiv = document.getElementById("reader");
+    
     if (readerDiv.classList.contains("oculto")) {
         readerDiv.classList.remove("oculto");
         if (!html5QrCode) {
             html5QrCode = new Html5Qrcode("reader");
         }
+        
         html5QrCode.start(
             { facingMode: "environment" },
             { fps: 10, qrbox: 250 },
@@ -47,11 +54,9 @@ function toggleScanner() {
                 }
                 procesarIdentificacion(matchId);
             },
-            errorMessage => {
-                // Errores de escaneo en tiempo real se pueden ignorar
-            }
+            errorMessage => {}
         ).catch(err => {
-            alert("No se pudo acceder a la cámara.");
+            alert("No se pudo acceder a la cámara o permisos denegados.");
             readerDiv.classList.add("oculto");
         });
     } else {
@@ -70,7 +75,8 @@ function registrarFichaje(tipo) {
     mensajeEl.style.color = "#333";
     mensajeEl.textContent = "Registrando " + tipo + "...";
 
-    const urlFinal = `${URL_API}?accion=fichaje_${tipo.toLowerCase()}&id_empleado=${encodeURIComponent(idActual)}`;
+    const accionTipo = (tipo.toLowerCase() === "entrada") ? "fichaje_entrada" : "fichaje_salida";
+    const urlFinal = `${URL_API}?accion=${accionTipo}&id_empleado=${encodeURIComponent(idActual)}`;
 
     fetch(urlFinal, {
         method: "GET",
@@ -79,6 +85,11 @@ function registrarFichaje(tipo) {
     .then(() => {
         mensajeEl.style.color = "green";
         mensajeEl.textContent = `¡${tipo} registrada con éxito para ${idActual}!`;
+        
+        // Limpia y regresa a la pantalla inicial tras 3 segundos
+        setTimeout(() => {
+            cambiarUsuario();
+        }, 3000);
     })
     .catch(error => {
         mensajeEl.style.color = "red";
