@@ -2,7 +2,6 @@ const URL_API = "https://script.google.com/macros/s/AKfycbxfLLc5emyPMR0G6ZWFps5G
 let html5QrCode = null;
 let idActual = "";
 
-// Función que captura el botón "Guardar ID" del HTML
 function guardarUsuarioManual() {
     const idInput = document.getElementById("idEmpleado");
     const id = idInput.value.trim();
@@ -22,7 +21,6 @@ function procesarIdentificacion(id) {
         html5QrCode.stop().catch(err => console.log(err));
     }
     
-    // Cambia de pantalla correctamente al panel de entrada y salida
     document.getElementById("input-container").classList.add("oculto");
     document.getElementById("panel-fichaje").classList.remove("oculto");
     document.getElementById("lbl-usuario").textContent = idActual;
@@ -79,6 +77,7 @@ function registrarFichaje(tipo) {
 
     const accionTipo = (tipo.toLowerCase() === "entrada") ? "fichaje_entrada" : "fichaje_salida";
 
+    // Método con iframe invisible para evitar bloqueos de CORS y registrar en la hoja Fichaje
     let iframe = document.getElementById("hidden-iframe");
     if (!iframe) {
         iframe = document.createElement("iframe");
