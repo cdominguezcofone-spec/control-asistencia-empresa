@@ -6,7 +6,7 @@
     <title>Control de Asistencia</title>
     <!-- Librería para leer códigos QR con la cámara -->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-    <!-- Enlace a tu archivo de estilos CSS -->
+    <!-- Enlace a los estilos -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,7 +16,7 @@
         <!-- Contenedor para ingresar ID manual o escanear -->
         <div id="input-container">
             <p>Ingresa tu ID de empleado o escanea tu QR</p>
-            <input type="text" id="idEmpleado" placeholder="Ej: NG-6491">
+            <input type="text" id="idEmpleado" placeholder="Ej: LS-4321">
             <button onclick="guardarUsuarioManual()">Guardar ID</button>
             <button class="btn-secundario" onclick="toggleScanner()">Escanear QR</button>
             <div id="reader" class="oculto"></div>
@@ -33,7 +33,7 @@
         <p id="mensaje"></p>
     </div>
 
-    <!-- Enlace a tu archivo de lógica JS -->
+    <!-- Enlace a la lógica JS -->
     <script src="script.js"></script>
 </body>
 </html>
