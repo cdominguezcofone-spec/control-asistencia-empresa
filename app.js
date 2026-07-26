@@ -2,6 +2,7 @@ const URL_API = "https://script.google.com/macros/s/AKfycbxfLLc5emyPMR0G6ZWFps5G
 let html5QrCode = null;
 let idActual = "";
 
+// Función que captura el botón "Guardar ID" del HTML
 function guardarUsuarioManual() {
     const idInput = document.getElementById("idEmpleado");
     const id = idInput.value.trim();
@@ -21,6 +22,7 @@ function procesarIdentificacion(id) {
         html5QrCode.stop().catch(err => console.log(err));
     }
     
+    // Cambia de pantalla correctamente al panel de entrada y salida
     document.getElementById("input-container").classList.add("oculto");
     document.getElementById("panel-fichaje").classList.remove("oculto");
     document.getElementById("lbl-usuario").textContent = idActual;
@@ -76,24 +78,43 @@ function registrarFichaje(tipo) {
     mensajeEl.textContent = "Registrando " + tipo + "...";
 
     const accionTipo = (tipo.toLowerCase() === "entrada") ? "fichaje_entrada" : "fichaje_salida";
-    const urlFinal = `${URL_API}?accion=${accionTipo}&id_empleado=${encodeURIComponent(idActual)}`;
 
-    fetch(urlFinal, {
-        method: "GET",
-        mode: "no-cors"
-    })
-    .then(() => {
+    let iframe = document.getElementById("hidden-iframe");
+    if (!iframe) {
+        iframe = document.createElement("iframe");
+        iframe.name = "hidden-iframe";
+        iframe.id = "hidden-iframe";
+        iframe.style.display = "none";
+        document.body.appendChild(iframe);
+    }
+
+    const form = document.createElement("form");
+    form.method = "GET";
+    form.action = URL_API;
+    form.target = "hidden-iframe";
+
+    const inputAccion = document.createElement("input");
+    inputAccion.type = "hidden";
+    inputAccion.name = "accion";
+    inputAccion.value = accionTipo;
+    form.appendChild(inputAccion);
+
+    const inputId = document.createElement("input");
+    inputId.type = "hidden";
+    inputId.name = "id_empleado";
+    inputId.value = idActual;
+    form.appendChild(inputId);
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+
+    setTimeout(() => {
         mensajeEl.style.color = "green";
         mensajeEl.textContent = `¡${tipo} registrada con éxito para ${idActual}!`;
         
-        // Limpia y regresa a la pantalla inicial tras 3 segundos
         setTimeout(() => {
             cambiarUsuario();
         }, 3000);
-    })
-    .catch(error => {
-        mensajeEl.style.color = "red";
-        mensajeEl.textContent = "Error al conectar con la planilla.";
-        console.error("Error:", error);
-    });
+    }, 1000);
 }
